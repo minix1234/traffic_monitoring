@@ -1,7 +1,7 @@
 # import the necessary packages
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
-from pyimagesearch.utils import Conf
+from pyimagesearch.utils import conf
 from imutils.video import VideoStream
 from imutils.io import TempFile
 from imutils.video import FPS
@@ -30,7 +30,7 @@ ap.add_argument("-c", "--conf", required=True,
 args = vars(ap.parse_args())
 
 # load the configuration file
-conf = Conf(args["conf"])
+conf = conf.Conf(args["conf"])
 
 # initialize the list of class labels MobileNet SSD was trained to
 # detect
@@ -51,10 +51,15 @@ net = cv2.dnn.readNetFromCaffe(conf["prototxt_path"],
     conf["model_path"])
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_MYRIAD)
 
+# MH - select video source
+source_video = 'input_video.mp4'
+
 # initialize the video stream and allow the camera sensor to warmup
 print("[INFO] warming up camera...")
-#vs = VideoStream(src=0).start()
-vs = VideoStream(usePiCamera=True).start()
+
+#vs = cv2.VideoCapture(source_video)
+vs = VideoStream(source_video).start()
+#vs = VideoStream(usePiCamera=True).start()
 time.sleep(2.0)
 
 # initialize the frame dimensions (we'll set them as soon as we read
@@ -65,8 +70,7 @@ W = None
 # instantiate our centroid tracker, then initialize a list to store
 # each of our dlib correlation trackers, followed by a dictionary to
 # map each unique object ID to a TrackableObject
-ct = CentroidTracker(maxDisappeared=conf["max_disappear"],
-    maxDistance=conf["max_distance"])
+ct = CentroidTracker(maxDisappeared=conf["max_disappear"]) #, maxDistance=conf["max_distance"]), M.H. CentroidTracker does not use maxDistance
 trackers = []
 trackableObjects = {}
 
