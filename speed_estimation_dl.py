@@ -57,8 +57,8 @@ source_video = 'input_video.mp4'
 # initialize the video stream and allow the camera sensor to warmup
 print("[INFO] warming up camera...")
 
-#vs = cv2.VideoCapture(source_video)
-vs = VideoStream(source_video).start()
+vs = cv2.VideoCapture(source_video)
+#vs = VideoStream(source_video).start()
 #vs = VideoStream(usePiCamera=True).start()
 time.sleep(2.0)
 
@@ -91,7 +91,11 @@ fps = FPS().start()
 while True:
     # grab the next frame from the stream, store the current
     # timestamp, and store the new date
-    frame = vs.read()
+    ret, frame = vs.read()
+
+    # Display the resulting frame 
+    cv2.imshow('frame', frame) 
+
     ts = datetime.now()
     newDate = ts.strftime("%m-%d-%y")
 
